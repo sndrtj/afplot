@@ -19,6 +19,11 @@ This column should contain the depth per allele, with the reference allele being
  
 All VCFs should be indexed with tabix, and should contain contigs in the header.
 
+## Installation
+
+afplot is available through pypi with:
+`pip install afplot` 
+
 
 ## Requirements
 
