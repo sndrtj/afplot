@@ -299,6 +299,7 @@ def main():
     parser.add_argument("-e", "--exclude-pattern",
                         type=str,
                         action="append",
+                        default=[],
                         help="Regex pattern to exclude from contig list")
 
     args = parser.parse_args()
