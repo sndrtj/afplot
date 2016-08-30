@@ -301,6 +301,9 @@ def main():
                         action="append",
                         default=[],
                         help="Regex pattern to exclude from contig list")
+    parser.add_argument("--color-palette",
+                        type=str,
+                        help="The name of a color palette to pass to seaborn.set_palette")
 
     args = parser.parse_args()
 
@@ -314,6 +317,12 @@ def main():
     for pattern in args.exclude_pattern:
         regex = re.compile(pattern)
         contigs = [x for x in contigs if not regex.match(x)]
+
+    if args.color_palette:
+        if len(samples) == 1:
+            sns.set_palette(args.color_palette, 4)
+        else:
+            sns.set_palette(args.color_palette, len(samples))
 
     if args.scatter:
         scatter_main(readers, args.label, samples, contigs, args.output, args.dpi)
