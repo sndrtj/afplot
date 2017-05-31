@@ -24,6 +24,7 @@ setup(
     license="MIT",
     packages=["afplot"],
     install_requires=[
+        "click",
         "numpy",
         "matplotlib",
         "pandas",
@@ -34,7 +35,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "afplot = afplot.afplot:main"
+            "afplot = afplot.cli:cli"
         ]
     },
     classifiers=[
