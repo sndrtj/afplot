@@ -22,7 +22,8 @@ import vcf
 
 def _is_vcf_version_at_least_0_6_8():
     """
-    The behaviour of vcfReader.fetch changed significantly from version 0.6.8 onwards
+    The behaviour of vcfReader.fetch changed significantly
+    from version 0.6.8 onwards
     :return: boolean
     """
     major, minor, patch = vcf.VERSION.split(".")
@@ -80,7 +81,8 @@ def get_distance_to_exp(record, sample_name):
     """
     Get distance to expected theoretical allele frequencies
     This assumes the AD to field to conform to GATK spec
-    i.e. the number of AD values EXACTLY matches the number of alleles (INCLUDING ref allele)
+    i.e. the number of AD values EXACTLY matches the number
+    of alleles (INCLUDING ref allele)
     :param record: VCF record
     :param sample_name: sample name
     :return: list of distances
@@ -94,7 +96,8 @@ def get_distance_to_exp(record, sample_name):
     if rtype == "no_call":
         return [0 for _ in freqs]
     elif rtype == "hom_ref":
-        # freq of ref allele should be 1.0, freq of all other alleles should be 0.0
+        # freq of ref allele should be 1.0,
+        # freq of all other alleles should be 0.0
         return [1 - freqs[0]] + freqs[1:]
     elif rtype == "hom_alt":
         # affected allele should be 1.0, all other alleles should be 0.0
@@ -110,7 +113,8 @@ def get_distance_to_exp(record, sample_name):
                 distances.append(f)
         return distances
     elif rtype == "het":
-        # freq of affected alleles should be 0.5, all other alleles should be 0.0
+        # freq of affected alleles should be 0.5,
+        # all other alleles should be 0.0
         if fmt.phased:
             idx_affected_alleles = [int(x) for x in fmt.data.GT.split("|")]
         else:
@@ -154,7 +158,8 @@ def get_array_for_chrom_all(reader, chromosome, label=None, sample=None):
                 continue
             for freq, dist in zip(ad, distances):
                 if not label:
-                    maf.append([record.POS, freq, get_variant_type(record, sample), dist])
+                    maf.append([record.POS, freq,
+                                get_variant_type(record, sample), dist])
                 else:
                     maf.append([record.POS, freq, label, dist])
     return np.array(maf)
@@ -166,10 +171,11 @@ def build_dataframe(readers, labels, samples, contigs):
     for r, l, s in zip(readers, labels, samples):
         sample_dict = OrderedDict()
         for chrom in contigs:
-            message = "Processing chromosome {0} for sample {1}".format(chrom, s)
+            message = "Processing chromosome {0} " \
+                      "for sample {1}".format(chrom, s)
             print(message, file=sys.stderr)
             if len(readers) == 1:
-               arr = get_array_for_chrom_all(r, chrom)
+                arr = get_array_for_chrom_all(r, chrom)
             else:
                 arr = get_array_for_chrom_all(r, chrom, l, s)
             message = "{0} data points processed".format(len(arr))
@@ -192,7 +198,8 @@ def build_dataframe(readers, labels, samples, contigs):
 
 def clean_df(df, contigs, column="af"):
     """
-    Clean dataframe so that it removes categories where all values of column are 0
+    Clean dataframe so that it removes categories
+    where all values of column are 0
     :param df:
     :return: cleaned df
     """
@@ -219,10 +226,12 @@ def scatter_main(readers, labels, samples, contigs, png, dpi=300):
     plt.savefig(png, dpi=dpi)
 
 
-def histogram_main(readers, labels, samples, contigs, png, dpi=300, kde_only=False):
+def histogram_main(readers, labels, samples, contigs,
+                   png, dpi=300, kde_only=False):
     df = build_dataframe(readers, labels, samples, contigs)
     df = clean_df(df, contigs)
-    g = sns.FacetGrid(df, col="chromosome", hue="label", aspect=1, col_wrap=4, sharey=False)
+    g = sns.FacetGrid(df, col="chromosome", hue="label",
+                      aspect=1, col_wrap=4, sharey=False)
     if kde_only:
         g = (g.map(sns.distplot, "af", hist=False).add_legend())
     else:
@@ -248,7 +257,8 @@ def distance_main(readers, labels, samples, contigs, png, dpi=300):
 def main():
     desc = """
     Create scatter plots or histogram of allele frequencies in vcf files.
-    If only one VCF is supplied, plots will be colored on call type (het/hom_ref/hom_alt).
+    If only one VCF is supplied, plots will be colored
+    on call type (het/hom_ref/hom_alt).
     If multiple VCF files are supplied, plots will be colored per file/label.
     Only *one* sample per VCF file can be plotted.
 
@@ -258,12 +268,14 @@ def main():
 
     VCF files preferably have the same contigs,
     i.e. they are produced with the same reference.
-    If this is not the case, this script will select the vcf file with the largest number of contigs.
+    If this is not the case, this script will select the vcf file
+    with the largest number of contigs.
 
     You may exclude contigs by supplying a regex pattern to the -e parameter.
     This parameter may be repeated.
     """
-    parser = argparse.ArgumentParser(description=desc, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(description=desc,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("-v", "--vcf", type=str,
                         help="Input vcf file(s)",
                         required=True,
@@ -273,7 +285,8 @@ def main():
                         required=True,
                         action="append")
     parser.add_argument("-s", "--sample", type=str,
-                        help="Sample identifiers (1 per vcf). Uses first sample in vcf by default",
+                        help="Sample identifiers (1 per vcf). "
+                             "Uses first sample in vcf by default",
                         action="append")
     parser.add_argument("-o", "--output",
                         type=str,
@@ -288,7 +301,8 @@ def main():
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--scatter",
-                       help="Make scatter plot of AFs per chromosome", action="store_true")
+                       help="Make scatter plot of AFs per chromosome",
+                       action="store_true")
     group.add_argument("--histogram",
                        help="Make histogram of AFs per chromosome",
                        action="store_true")
@@ -303,7 +317,8 @@ def main():
                         help="Regex pattern to exclude from contig list")
     parser.add_argument("--color-palette",
                         type=str,
-                        help="The name of a color palette to pass to seaborn.set_palette")
+                        help="The name of a color palette to pass to "
+                             "seaborn.set_palette")
 
     args = parser.parse_args()
 
@@ -325,11 +340,14 @@ def main():
             sns.set_palette(args.color_palette, len(samples))
 
     if args.scatter:
-        scatter_main(readers, args.label, samples, contigs, args.output, args.dpi)
+        scatter_main(readers, args.label, samples,
+                     contigs, args.output, args.dpi)
     elif args.histogram:
-        histogram_main(readers, args.label, samples, contigs, args.output, args.dpi, args.kde_only)
+        histogram_main(readers, args.label, samples,
+                       contigs, args.output, args.dpi, args.kde_only)
     elif args.distance:
-        distance_main(readers, args.label, samples, contigs, args.output, args.dpi)
+        distance_main(readers, args.label, samples,
+                      contigs, args.output, args.dpi)
 
 
 if __name__ == '__main__':
