@@ -9,8 +9,11 @@ afplot.cli
 import re
 
 import click
+import seaborn as sns
+import vcf
 
-from .utils import Region
+from .utils import Region, get_contigs
+from .whole_genome import histogram_main, scatter_main, distance_main
 
 
 def validate_region_str(ctx, param, value):
@@ -110,6 +113,22 @@ def generic_option(options):
     return __generic_option
 
 
+def _setup_genome_values(**kwargs):
+    """Setup values used for whole-genome plotting."""
+    readers = [vcf.Reader(filename=x) for x in kwargs.get("vcf", [])]
+    contigs = get_contigs(readers, kwargs.get("exclude-pattern", []))
+    if len(kwargs.get('sample', [])) == 0:
+        samples = [x.samples[0] for x in readers]
+    else:
+        samples = kwargs.get('sample', [])
+    if kwargs.get('color-palette') is not None:
+        if len(samples) == 1:
+            sns.set_palette(kwargs.get('color-palette'), 4)
+        else:
+            sns.set_palette(kwargs.get('color-palette'), len(samples))
+    return readers, contigs, samples
+
+
 @click.group(short_help="Whole-genome plots")
 def cli_whole_genome(**kwargs):
     """
@@ -139,21 +158,45 @@ def cli_whole_genome(**kwargs):
 @click.command(short_help="Whole-genome histogram")
 def whole_genome_histogram(**kwargs):
     """Create histograms over every chromosome."""
-    pass
+    readers, contigs, samples = _setup_genome_values(**kwargs)
+    labels = kwargs.get('label', [])
+    dpi = kwargs.get('dpi', None)
+    kde = kwargs.get('kde-only', False)
+    output = kwargs.get('output')
+    if dpi is None:
+        histogram_main(readers, labels, samples,
+                       contigs, output, kde_only=kde)
+    else:
+        histogram_main(readers, labels, samples,
+                       contigs, output, kde_only=kde, dpi=dpi)
 
 
 @generic_option(shared_options_genome)
 @click.command(short_help="Whole-genome scatter plot")
 def whole_genome_scatter(**kwargs):
     """Create scatter plot of allele frequencies over every chromosome."""
-    pass
+    readers, contigs, samples = _setup_genome_values(**kwargs)
+    labels = kwargs.get('label', [])
+    dpi = kwargs.get('dpi', None)
+    output = kwargs.get('output')
+    if dpi is None:
+        scatter_main(readers, labels, samples, contigs, output)
+    else:
+        scatter_main(readers, labels, samples, contigs, output, dpi=dpi)
 
 
 @generic_option(shared_options_genome)
 @click.command(short_help="Whole-genome distance plot")
 def whole_genome_distance(**kwargs):
     """Create scatter plot distance to theoretical AF over very chromosome."""
-    pass
+    readers, contigs, samples = _setup_genome_values(**kwargs)
+    labels = kwargs.get('label', [])
+    dpi = kwargs.get('dpi', None)
+    output = kwargs.get('output')
+    if dpi is None:
+        distance_main(readers, labels, samples, contigs, output)
+    else:
+        distance_main(readers, labels, samples, contigs, output, dpi=dpi)
 
 
 @click.group(short_help="Region plots")

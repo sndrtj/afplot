@@ -6,6 +6,8 @@ afplot.utils
 :license: MIT
 """
 
+
+import re
 from collections import namedtuple
 import vcf
 
@@ -39,3 +41,18 @@ def get_longest_contig_list(readers):
     """
     sorted_readers = sorted(readers, key=lambda x: len(x.contigs))
     return sorted_readers[0].contigs.keys()
+
+
+def get_contigs(readers, exclude_patterns):
+    """
+    Get list of contigs to be used 
+    from a list of VCF readers and patters to exclude
+    :param readers: list of VCF readers
+    :param exclude_patterns: Regex patterns to exclude
+    :return: list of usable contig names
+    """
+    contigs = get_longest_contig_list(readers)
+    for pattern in exclude_patterns:
+        regex = re.compile(pattern)
+        contigs = [x for x in contigs if not regex.match(x)]
+    return contigs
