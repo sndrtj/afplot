@@ -29,7 +29,11 @@ shared_options_all = [
     click.option("--dpi",
                  type=int,
                  help="DPI for output PNGs (default: 300)",
-                 default=300)
+                 default=300),
+    click.option("--color-palette",
+                 type=str,
+                 help="The name of a color palette "
+                      "to pass to seaborn.set_palette")
 ]
 
 
@@ -108,7 +112,24 @@ def generic_option(options):
 
 @click.group(short_help="Whole-genome plots")
 def cli_whole_genome(**kwargs):
-    """Create whole-genome plots for one or multiple VCFs."""
+    """
+    Create whole-genome plots for one or multiple VCFs.
+    
+    If only one VCF is supplied, plots will be colored on call type (het/hom_ref/hom_alt).
+    If multiple VCF files are supplied, plots will be colored per file/label.
+    Only *one* sample per VCF file can be plotted.
+
+    Your VCF file *MUST* contain an AD column in the FORMAT field.
+    Your VCF file *MUST* have contig names and lengths placed in the header.
+    Your VCF file *MUST* be indexed with tabix.
+
+    VCF files preferably have the same contigs,
+    i.e. they are produced with the same reference.
+    If this is not the case, this script will select the vcf file with the largest number of contigs.
+
+    You may exclude contigs by supplying a regex pattern to the -e parameter.
+    This parameter may be repeated.
+    """
     pass
 
 
