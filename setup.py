@@ -35,7 +35,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "afplot = afplot.cli:cli"
+            "afplot = afplot.cli:main"
         ]
     },
     classifiers=[
