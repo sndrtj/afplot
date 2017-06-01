@@ -133,8 +133,9 @@ def _setup_genome_values(**kwargs):
 def cli_whole_genome(**kwargs):
     """
     Create whole-genome plots for one or multiple VCFs.
-    
-    If only one VCF is supplied, plots will be colored on call type (het/hom_ref/hom_alt).
+
+    If only one VCF is supplied, plots will be colored
+    on call type (het/hom_ref/hom_alt).
     If multiple VCF files are supplied, plots will be colored per file/label.
     Only *one* sample per VCF file can be plotted.
 
@@ -144,7 +145,8 @@ def cli_whole_genome(**kwargs):
 
     VCF files preferably have the same contigs,
     i.e. they are produced with the same reference.
-    If this is not the case, this script will select the vcf file with the largest number of contigs.
+    If this is not the case, this script will select the vcf file with the
+    largest number of contigs.
 
     You may exclude contigs by supplying a regex pattern to the -e parameter.
     This parameter may be repeated.
