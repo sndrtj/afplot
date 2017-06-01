@@ -25,7 +25,15 @@ def validate_region_str(ctx, param, value):
                                  'valid region string'.format(value))
 
 
-shared_options_regions = [
+shared_options_all = [
+    click.option("--dpi",
+                 type=int,
+                 help="DPI for output PNGs (default: 300)",
+                 default=300)
+]
+
+
+shared_options_regions = shared_options_all + [
     click.option("--vcf",
                  "-v",
                  type=click.Path(exists=True),
@@ -52,7 +60,7 @@ shared_options_regions = [
 ]
 
 
-shared_options_genome = [
+shared_options_genome = shared_options_all + [
     click.option("--vcf",
                  "-v",
                  type=click.Path(exists=True),
@@ -104,6 +112,8 @@ def cli_whole_genome(**kwargs):
     pass
 
 
+@click.option("--kde-only", "-k", is_flag=True,
+              help="Only show kernel density plot")
 @generic_option(shared_options_genome)
 @click.command(short_help="Whole-genome histogram")
 def whole_genome_histogram(**kwargs):
@@ -131,6 +141,8 @@ def cli_regions(**kwargs):
     pass
 
 
+@click.option("--kde-only", "-k", is_flag=True,
+              help="Only show kernel density plot")
 @generic_option(shared_options_regions)
 @click.command(short_help="Region histogram")
 def region_histogram(**kwargs):
