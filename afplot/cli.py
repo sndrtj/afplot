@@ -12,8 +12,10 @@ import click
 import seaborn as sns
 import vcf
 
-from .utils import Region, get_contigs
+from .utils import Region, get_contigs, bed_reader
 from .whole_genome import histogram_main, scatter_main, distance_main
+from .region import region_histogram_main, \
+    region_scatter_main, region_distance_main
 
 
 def validate_region_str(ctx, param, value):
@@ -51,6 +53,10 @@ shared_options_regions = shared_options_all + [
                  type=click.Path(exists=True),
                  required=True,
                  help="Path to output directory"),
+    click.option("--name",
+                 "-n",
+                 type=str,
+                 help="Optional title for plot"),
     click.option("--region-file",
                  "-L",
                  type=click.Path(exists=True),
@@ -127,6 +133,22 @@ def _setup_genome_values(**kwargs):
         else:
             sns.set_palette(kwargs.get('color-palette'), len(samples))
     return readers, contigs, samples
+
+
+def _setup_region_values(**kwargs):
+    """Setup values for region plotting."""
+    reader = vcf.Reader(filename=kwargs.get("vcf"))
+    region = kwargs.get("region")
+    region_file = kwargs.get("region-file")
+    margin = kwargs.get("margin", 0)
+    if region is not None:
+        nrs = [Region(region.chr, int(region.start)-margin,
+                      int(region.end)+margin)]
+    elif region_file is not None:
+        nrs = bed_reader(region_file, margin)
+    else:
+        nrs = []
+    return reader, nrs
 
 
 @click.group(short_help="Whole-genome plots")
@@ -213,21 +235,43 @@ def cli_regions(**kwargs):
 @click.command(short_help="Region histogram")
 def region_histogram(**kwargs):
     """Create histograms of allele frequencies over every region."""
-    pass
+    reader, regions = _setup_region_values(**kwargs)
+    region_histogram_main(
+        reader,
+        kwargs.get("output_dir"),
+        regions,
+        kwargs.get("name"),
+        kwargs.get("dpi"),
+        kwargs.get("kde-only")
+    )
 
 
 @generic_option(shared_options_regions)
 @click.command(short_help="Region scatter plot")
 def region_scatter(**kwargs):
     """Create scatter plot of allele frequencies over every region."""
-    pass
+    reader, regions = _setup_region_values(**kwargs)
+    region_scatter_main(
+        reader,
+        kwargs.get("output_dir"),
+        regions,
+        kwargs.get("name"),
+        kwargs.get("dpi")
+    )
 
 
 @generic_option(shared_options_regions)
 @click.command(short_help="Region distance plot")
 def region_distance(**kwargs):
-    """Create scatter plot ofdistance to theoretical AF over every region."""
-    pass
+    """Create scatter plot of distance to theoretical AF over every region."""
+    reader, regions = _setup_region_values(**kwargs)
+    region_distance_main(
+        reader,
+        kwargs.get("output_dir"),
+        regions,
+        kwargs.get("name"),
+        kwargs.get("dpi")
+    )
 
 
 @click.group()
