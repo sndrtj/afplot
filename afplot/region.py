@@ -8,6 +8,7 @@ afplot.region
 
 from __future__ import print_function
 from os.path import join
+from warnings import warn
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -46,6 +47,8 @@ def build_df_for_region(reader, region, sample=None, label=None):
                 maf.append([record.POS, freq,
                             get_variant_type(record, sample), dist])
     arr = np.array(maf)
+    if len(arr) == 0:
+        return None
     df = pd.DataFrame(
         {"pos": [int(x) for x in arr[:, 0]],
          "af": [float(x) for x in arr[:, 1]],
@@ -83,7 +86,6 @@ def plot_single_scatter(dataframe, output, category="af", dpi=300, label=None):
     f.add_legend()
     f.set_titles("")
     for x in f.axes:
-        x.set_xlim(0, )
         x.set_ylim(0, 1.0)
     if label is not None:
         plt.title(label)
@@ -99,6 +101,9 @@ def region_histogram_main(reader, output_dir, regions,
         name = region_key(reg)
         opath = join(output_dir, "{0}.png".format(name))
         df = build_df_for_region(reader, reg, label=label)
+        if df is None:
+            warn("Region {0} is empty".format(name))
+            continue
         plot_single_histogram(df, opath, dpi, kde_only, label=label)
 
 
@@ -107,6 +112,9 @@ def region_scatter_main(reader, output_dir, regions, label, dpi=300):
         name = region_key(reg)
         opath = join(output_dir, "{0}.png".format(name))
         df = build_df_for_region(reader, reg, label=label)
+        if df is None:
+            warn("Region {0} is empty".format(name))
+            continue
         plot_single_scatter(df, opath, "af", dpi=dpi, label=label)
 
 
@@ -115,4 +123,7 @@ def region_distance_main(reader, output_dir, regions, label, dpi=300):
         name = region_key(reg)
         opath = join(output_dir, "{0}.png".format(name))
         df = build_df_for_region(reader, reg, label=label)
+        if df is None:
+            warn("Region {0} is empty".format(name))
+            continue
         plot_single_scatter(df, opath, "distance", dpi=dpi, label=label)

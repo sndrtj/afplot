@@ -19,6 +19,8 @@ from .region import region_histogram_main, \
 
 
 def validate_region_str(ctx, param, value):
+    if value is None:
+        return None
     region_re = re.compile('^([\w\d]+):(\d+)-(\d+)$')
     match = region_re.match(value)
     if match is not None:
@@ -139,7 +141,7 @@ def _setup_region_values(**kwargs):
     """Setup values for region plotting."""
     reader = vcf.Reader(filename=kwargs.get("vcf"))
     region = kwargs.get("region")
-    region_file = kwargs.get("region-file")
+    region_file = kwargs.get("region_file")
     margin = kwargs.get("margin", 0)
     if region is not None:
         nrs = [Region(region.chr, int(region.start)-margin,
