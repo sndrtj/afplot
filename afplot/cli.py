@@ -225,7 +225,15 @@ def whole_genome_distance(**kwargs):
 
 @click.group(short_help="Region plots")
 def cli_regions(**kwargs):
-    """Create plots for regions of interest for one VCF."""
+    """
+    Create plots for regions of interest for one VCF.
+    
+    Plots will be colored on call type (het/hom_alt/hom_ref).
+    
+    Your VCF file *MUST* contain an AD column in the FORMAT field.
+    Your VCF file *MUST* have contig names and lengths placed in the header.
+    Your VCF file *MUST* be indexed with tabix.
+    """
     pass
 
 
