@@ -40,7 +40,7 @@ def get_longest_contig_list(readers):
     :return: list of contig names
     """
     sorted_readers = sorted(readers, key=lambda x: len(x.contigs))
-    return sorted_readers[0].contigs.keys()
+    return sorted_readers[-1].contigs.keys()
 
 
 def get_contigs(readers, exclude_patterns):
@@ -77,8 +77,12 @@ def bed_reader(path, margin=0):
     with open(path) as handle:
         for line in handle:
             s = line.strip().split("\t")
+            if int(s[1]) - margin <= 0:
+                start = 0
+            else:
+                start = int(s[1]) - margin
             yield Region(
                 chr=s[0],
-                start=int(s[1])-margin,
+                start=start,
                 end=int(s[2])+margin
             )
