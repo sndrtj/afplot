@@ -14,13 +14,13 @@ import vcf
 Region = namedtuple("Region", ["chr", "start", "end"])
 
 
-def _is_vcf_version_at_least_0_6_8():
+def _is_vcf_version_at_least_0_6_8(pyvcf=vcf):
     """
     The behaviour of vcfReader.fetch changed significantly
     from version 0.6.8 onwards
     :return: boolean
     """
-    major, minor, patch = vcf.VERSION.split(".")
+    major, minor, patch = pyvcf.VERSION.split(".")
     if int(major) == 0 and int(minor) == 6 and int(patch) >= 8:
         return True
     elif int(major) == 0 and int(minor) > 6:
