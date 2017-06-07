@@ -11,6 +11,7 @@ from os.path import join
 from warnings import warn
 
 import numpy as np
+from numpy.linalg import LinAlgError
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -64,9 +65,27 @@ def plot_single_histogram(dataframe, output, dpi=300,
                           kde_only=False, label=None):
     g = sns.FacetGrid(dataframe, col="chrom", hue="label", col_wrap=2)
     if kde_only:
-        g = (g.map(sns.distplot, "af", hist=False).add_legend().set_titles(""))
+        try:
+            g = (g.map(sns.distplot, "af", hist=False).
+                 add_legend().
+                 set_titles(""))
+        except LinAlgError:
+            warn("Cannot create KDE for this data set."
+                 "Defaulting to histogram")
+            g = (g.map(sns.distplot, "af", hist=True, kde=False).
+                 add_legend().
+                 set_titles(""))
     else:
-        g = (g.map(sns.distplot, "af").add_legend().set_titles(""))
+        try:
+            g = (g.map(sns.distplot, "af").
+                 add_legend().
+                 set_titles(""))
+        except LinAlgError:
+            warn("Cannot create KDE for this data set."
+                 "Defaulting to histogram")
+            g = (g.map(sns.distplot, "af", hist=True, kde=False).
+                 add_legend().
+                 set_titles(""))
     for x in g.axes:
         if x.get_ylim()[1] > 10:
             x.set_ylim(0, 10)

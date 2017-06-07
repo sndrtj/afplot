@@ -299,7 +299,7 @@ def cli():
     pass
 
 
-def main():
+def _setup_cli():
     cli_regions.add_command(region_histogram, "histogram")
     cli_regions.add_command(region_scatter, "scatter")
     cli_regions.add_command(region_distance, "distance")
@@ -308,6 +308,10 @@ def main():
     cli_whole_genome.add_command(whole_genome_distance, "distance")
     cli.add_command(cli_regions, "regions")
     cli.add_command(cli_whole_genome, "whole-genome")
+
+
+def main():
+    _setup_cli()
     cli()
 
 
