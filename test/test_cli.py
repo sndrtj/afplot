@@ -89,5 +89,45 @@ class TestCli(object):
         for z in listdir(temp_dir):
             assert "PNG image data" in magic.from_file(join(temp_dir, z))
 
+    def test_whole_genome_scatter(self, initialized_cli):
+        runner = CliRunner()
+        tmp = NamedTemporaryFile(suffix=".png")
+        result = runner.invoke(initialized_cli, ["whole-genome", "scatter",
+                                                 "-v", mini_vcf, "-o",
+                                                 tmp.name, "-l", "test"])
+        assert result.exit_code == 0
+        assert "PNG image data" in magic.from_file(tmp.name)
+
+    def test_whole_genome_multi_scatter(self, initialized_cli):
+        runner = CliRunner()
+        tmp = NamedTemporaryFile(suffix=".png")
+        result = runner.invoke(initialized_cli, ["whole-genome", "scatter",
+                                                 "-v", mini_vcf,
+                                                 "-v", mini_vcf, "-o",
+                                                 tmp.name, "-l", "test",
+                                                 "-l", "test2"])
+        assert result.exit_code == 0
+        assert "PNG image data" in magic.from_file(tmp.name)
+
+    def test_whole_genome_distance(self, initialized_cli):
+        runner = CliRunner()
+        tmp = NamedTemporaryFile(suffix=".png")
+        result = runner.invoke(initialized_cli, ["whole-genome", "distance",
+                                                 "-v", mini_vcf, "-o",
+                                                 tmp.name, "-l", "test"])
+        assert result.exit_code == 0
+        assert "PNG image data" in magic.from_file(tmp.name)
+
+    def test_whole_genome_multi_distance(self, initialized_cli):
+        runner = CliRunner()
+        tmp = NamedTemporaryFile(suffix=".png")
+        result = runner.invoke(initialized_cli, ["whole-genome", "distance",
+                                                 "-v", mini_vcf,
+                                                 "-v", mini_vcf, "-o",
+                                                 tmp.name, "-l", "test",
+                                                 "-l", "test2"])
+        assert result.exit_code == 0
+        assert "PNG image data" in magic.from_file(tmp.name)
+
 
 
