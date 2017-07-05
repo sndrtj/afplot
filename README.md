@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/sndrtj/afplot.svg?branch=master)](https://travis-ci.org/sndrtj/afplot)
+[![Coverage Status](https://coveralls.io/repos/github/sndrtj/afplot/badge.svg?branch=master)](https://coveralls.io/github/sndrtj/afplot?branch=master)
+
 # afplot
 
 This is a tool to plot allele frequencies in VCF files.

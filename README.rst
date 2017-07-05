@@ -1,3 +1,5 @@
+|Build Status| |Coverage Status|
+
 afplot
 ======
 
@@ -133,3 +135,8 @@ License
 -------
 
 MIT
+
+.. |Build Status| image:: https://travis-ci.org/sndrtj/afplot.svg?branch=master
+   :target: https://travis-ci.org/sndrtj/afplot
+.. |Coverage Status| image:: https://coveralls.io/repos/github/sndrtj/afplot/badge.svg?branch=master
+   :target: https://coveralls.io/github/sndrtj/afplot?branch=master
