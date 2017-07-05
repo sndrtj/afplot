@@ -6,4 +6,6 @@ afplot
 :license: MIT
 """
 
+import matplotlib
+matplotlib.use('Agg')
 from .afplot import *
