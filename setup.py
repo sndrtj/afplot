@@ -15,7 +15,7 @@ with open(readme_file) as desc_handle:
 
 setup(
     name="afplot",
-    version="0.2",
+    version="0.2.1",
     description="Plot allele frequencies in VCF files",
     long_description=long_desc,
     author="Sander Bollen",

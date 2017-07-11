@@ -110,6 +110,10 @@ For instance, all contigs containing "gl" can be filtered out by doing:
 
 ## Changelog
 
+### 0.2.1 
+
+* Fix bug where headless systems failed. Matplotlib now uses the `agg` backend
+
 ### 0.2
 
 The entire command line interface was changed to use `click`,
