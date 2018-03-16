@@ -124,16 +124,16 @@ def generic_option(options):
 def _setup_genome_values(**kwargs):
     """Setup values used for whole-genome plotting."""
     readers = [vcf.Reader(filename=x) for x in kwargs.get("vcf", [])]
-    contigs = get_contigs(readers, kwargs.get("exclude-pattern", []))
+    contigs = get_contigs(readers, kwargs.get("exclude_pattern", []))
     if len(kwargs.get('sample', [])) == 0:
         samples = [x.samples[0] for x in readers]
     else:
         samples = kwargs.get('sample', [])
-    if kwargs.get('color-palette') is not None:
+    if kwargs.get('color_palette') is not None:
         if len(samples) == 1:
-            sns.set_palette(kwargs.get('color-palette'), 4)
+            sns.set_palette(kwargs.get('color_palette'), 4)
         else:
-            sns.set_palette(kwargs.get('color-palette'), len(samples))
+            sns.set_palette(kwargs.get('color_palette'), len(samples))
     return readers, contigs, samples
 
 
