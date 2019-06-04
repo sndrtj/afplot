@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/sndrtj/afplot.svg?branch=master)](https://travis-ci.org/sndrtj/afplot)
-[![Coverage Status](https://coveralls.io/repos/github/sndrtj/afplot/badge.svg?branch=master)](https://coveralls.io/github/sndrtj/afplot?branch=master)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3238297.svg)](https://doi.org/10.5281/zenodo.3238297)
 [![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat)](http://bioconda.github.io/recipes/afplot/README.html)
 

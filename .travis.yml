@@ -1,13 +1,10 @@
 language: python
 python:
-  - 3.4
-  - 3.5
-  - 3.6
+  - "3.4"
+  - "3.5"
+  - "3.6"
 install:
   - pip install --upgrade pip setuptools wheel
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
-  - pip install coveralls --use-wheel
 script: python setup.py develop && py.test -v --cov afplot --cov-report term-missing
-after_success:
-  - coveralls
