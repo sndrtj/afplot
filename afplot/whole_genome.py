@@ -111,7 +111,7 @@ def clean_df(df, contigs, column="af"):
 
 def scatter_main(readers, labels, samples, contigs, png, dpi=300):
     df = build_dataframe(readers, labels, samples, contigs)
-    f = sns.lmplot("pos", "af", df, col="chromosome",
+    f = sns.lmplot(df, x="pos", y="af", col="chromosome",
                    col_wrap=4, fit_reg=False,
                    hue="label", scatter_kws={"alpha": 0.3}, aspect=3)
 
@@ -139,7 +139,7 @@ def histogram_main(readers, labels, samples, contigs,
 
 def distance_main(readers, labels, samples, contigs, png, dpi=300):
     df = build_dataframe(readers, labels, samples, contigs)
-    f = sns.lmplot("pos", "distance", df, col="chromosome",
+    f = sns.lmplot(df, x="pos", y="distance", col="chromosome",
                    col_wrap=4, fit_reg=False,
                    hue="label", scatter_kws={"alpha": 0.3}, aspect=3)
     for i, x in enumerate(f.axes):
